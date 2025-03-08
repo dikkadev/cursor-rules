@@ -15,6 +15,7 @@ This repository contains rules for:
 
 - **Go**: Best practices for Go development, including dependency management
 - **Python**: Guidelines for using `uv` for Python project management
+- **Common**: General purpose rules that aren't language-specific
 - **Meta Rules**: Rules for creating and improving Cursor rules themselves
 
 ## How to Use These Rules

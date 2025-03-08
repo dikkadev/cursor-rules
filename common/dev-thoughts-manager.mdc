@@ -1,0 +1,158 @@
+---
+description: Guidelines for managing development thoughts and notes in markdown format
+globs: *.md
+alwaysApply: false
+---
+# Development Thoughts Manager
+
+This rule provides guidance for managing development thoughts, plans, and notes in a structured way. Using a dedicated `dev_thoughts` directory with consistently formatted markdown files helps track ideas, progress, and decisions during development.
+
+## Directory Structure
+
+- Always use a dedicated `dev_thoughts` directory at the project root for all development notes
+- Ensure this directory is properly ignored in version control
+- When a `.gitignore` file exists, automatically add the `dev_thoughts` directory to it
+- Files should be organized by topic or feature, not by date
+
+## File Naming and Structure
+
+- Use descriptive, kebab-case filenames that clearly indicate the topic or feature
+- Examples: `auth-system-implementation.md`, `database-migration-plan.md`, `ui-redesign-thoughts.md`
+- Avoid generic names like `notes.md` or `thoughts.md`
+- Each file should focus on a single topic, feature, or component
+
+## Content Formatting
+
+1. **First Line**: Always start with an italic line explaining why the file exists
+   ```markdown
+   _This document tracks the implementation plan and decisions for the authentication system._
+   ```
+
+2. **Numbered Sections**: Always use numbered sections for organization
+   ```markdown
+   ## 1. Current Status
+   
+   ## 2. Implementation Plan
+   
+   ## 3. Open Questions
+   
+   ## 4. Decisions Made
+   ```
+
+3. **Updates**: When adding new information, use numbered update sections
+   ```markdown
+   ## 5. Updates
+   
+   ### 5.1. Update - [Date]
+   ```
+
+4. **Checklists**: Use markdown checklists sparingly, only for actionable items
+   ```markdown
+   - [ ] Research OAuth providers
+   - [ ] Create database schema for users
+   - [ ] Implement login endpoints
+   ```
+
+## Usage Guidelines
+
+### Creating New Files
+
+```markdown
+# Feature Name or Topic
+
+_This document tracks thoughts and planning for [specific purpose]._
+
+## 1. Overview
+[Brief description of what this feature/topic is about]
+
+## 2. Requirements
+[List of requirements or goals]
+
+## 3. Implementation Plan
+[Step-by-step approach or strategy]
+
+## 4. Open Questions
+[Questions that need answers before or during implementation]
+
+## 5. Updates
+[Place for tracking progress and changes in thinking]
+```
+
+### Updating Existing Files
+
+- Prefer modifying existing files over creating new ones
+- Add new numbered sections for major new topics
+- Use the Updates section for tracking progress
+- Remove completed items and outdated information to keep files relevant
+- Consolidate related notes if they become fragmented across multiple files
+
+### Maintenance
+
+- Review and clean up files periodically to remove resolved questions and completed work
+- Archive files for completed features by moving them to `dev_thoughts/archive/`
+- Summarize key decisions from archived files in project documentation
+
+## Version Control Handling
+
+When initializing a `dev_thoughts` directory in a project:
+
+1. Create the directory if it doesn't exist
+2. Automatically add it to `.gitignore` if one exists
+   ```
+   # Development thoughts and notes
+   dev_thoughts/
+   ```
+3. If no `.gitignore` exists, suggest creating one with the entry above
+
+## Example File
+
+```markdown
+# Authentication System Implementation
+
+_This document tracks the implementation plan and considerations for the new authentication system._
+
+## 1. Requirements
+
+- Support both local username/password and OAuth2 authentication
+- Implement secure password storage with bcrypt
+- Provide password reset functionality
+- Support role-based access control
+
+## 2. Technical Approach
+
+- Use JWT tokens for maintaining session state
+- Store tokens in HTTP-only cookies
+- Implement token rotation strategy for security
+- Separate authentication service from main application
+
+## 3. Implementation Steps
+
+- [ ] Create user schema and migrations
+- [ ] Implement basic username/password auth
+- [ ] Add OAuth providers (Google, GitHub)
+- [ ] Develop permission system
+
+## 4. Open Questions
+
+- Should we implement 2FA from the start or add later?
+- How long should access tokens remain valid?
+- Do we need separate admin and user portals?
+
+## 5. Updates
+
+### 5.1. Update - 2023-10-15
+
+Decided to use Okta as our OAuth provider after comparing options. This gives us:
+1. Better enterprise features
+2. Simpler integration with existing systems
+3. More comprehensive audit logging
+
+### 5.2. Update - 2023-10-20
+
+Completed initial user schema design. Going with:
+1. Separate tables for auth credentials and user profiles
+2. Joining through a UUID primary key
+3. Separate table for permissions/roles
+```
+
+Remember that `dev_thoughts` files are working documents that should evolve with your project. They are meant to help capture your thinking and planning, but should be cleaned up regularly to stay useful. 
