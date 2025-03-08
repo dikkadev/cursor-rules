@@ -1,0 +1,81 @@
+---
+description: Best practices for Go development and dependency management
+globs: *.go,go.mod,go.sum
+alwaysApply: false
+---
+# Go Development Best Practices
+
+## Dependency Management
+
+- NEVER edit the go.mod or go.sum files directly
+- Use `go mod` commands for all dependency management:
+  - `go mod init github.com/dikkadev/[PACKAGE]` to initialize a new module
+  - `go mod tidy` to add missing and remove unused modules
+  - `go get [package]` to add a dependency
+  - `go get [package]@[version]` to add a specific version
+  - `go get -u [package]` to upgrade a dependency
+  - `go mod vendor` if vendoring is required
+
+## Project Structure
+
+Follow the standard Go project structure:
+
+```
+project-root/
+├── cmd/                    # Command applications
+│   └── app/                # Your application
+│       └── main.go         # Application entry point
+├── internal/               # Private code
+│   ├── pkg1/               # Package directories
+│   └── pkg2/
+├── pkg/                    # Public libraries
+├── api/                    # API definitions (protobuf, OpenAPI, etc.)
+├── web/                    # Web assets
+├── configs/                # Configuration files
+├── scripts/                # Scripts for build, setup, etc.
+├── test/                   # Additional test applications and test data
+├── docs/                   # Documentation
+├── examples/               # Examples
+├── third_party/            # Third party tools and forked code
+├── go.mod                  # Module definition
+├── go.sum                  # Dependency checksums
+└── README.md               # Project documentation
+```
+
+## Coding Conventions
+
+- Use meaningful package names (avoid generic names like "util")
+- Follow Go naming conventions:
+  - Use MixedCaps or mixedCaps rather than underscores
+  - Keep names short and descriptive
+  - Acronyms should be all uppercase (e.g., HTTP, URL)
+- Organize imports in groups: standard library, third-party, local packages
+- Use error handling with explicit checks (avoid using panic)
+- Prefer composition over inheritance
+- Use interfaces for behavior abstraction
+- Write comprehensive tests using the standard testing package
+
+## Error Handling
+
+- Always check errors and handle them appropriately
+- Use the `errors` package or `fmt.Errorf` for error creation
+- Consider using custom error types for specific error cases
+- Wrap errors with context using `fmt.Errorf("doing something: %w", err)`
+- Return errors rather than using panic in libraries
+
+## Documentation
+
+- Document all exported functions, types, and packages
+- Follow the godoc conventions
+- Include examples in documentation where appropriate
+- Write a comprehensive README.md for your project
+
+## Testing
+
+- Write unit tests for all packages
+- Use table-driven tests where appropriate
+- Use the standard `testing` package
+- Consider using testify for more complex assertions
+- Aim for high test coverage, especially for critical code paths
+
+Remember to always follow the Go proverbs and idiomatic Go practices.

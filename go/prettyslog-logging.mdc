@@ -1,0 +1,184 @@
+---
+description: Best practices for using prettyslog with Go's slog package
+globs: *.go
+alwaysApply: false
+---
+# Prettyslog with Go's slog Package
+
+## Setup and Initialization
+
+- Import the required packages:
+  ```go
+  import (
+      "log/slog"
+      "os"
+      
+      "github.com/dikkadev/prettyslog"
+  )
+  ```
+
+- Initialize the logger with prettyslog handler:
+  ```go
+  // Basic setup with default options
+  logger := slog.New(prettyslog.NewHandler(os.Stdout, nil))
+  
+  // Set as default logger
+  slog.SetDefault(logger)
+  ```
+
+- Configure with custom options:
+  ```go
+  opts := &prettyslog.Options{
+      Level:       slog.LevelDebug,
+      TimeFormat:  time.RFC3339,
+      ColoredTime: true,
+      ColoredLevel: true,
+      ShowSource:  true,
+  }
+  
+  logger := slog.New(prettyslog.NewHandler(os.Stdout, opts))
+  ```
+
+## Using Structured Logging
+
+- Use attributes for structured logging:
+  ```go
+  logger.Info("User logged in", 
+      "user_id", 123, 
+      "username", "johndoe",
+      "login_count", 5)
+  ```
+
+- Use groups to organize related attributes:
+  ```go
+  logger.Info("Processing request",
+      slog.Group("user", 
+          "id", userId,
+          "name", userName),
+      slog.Group("request",
+          "method", "GET",
+          "path", "/api/users",
+          "duration", duration))
+  ```
+
+- Log errors with context:
+  ```go
+  if err != nil {
+      logger.Error("Failed to process request", 
+          "error", err,
+          slog.Group("context",
+              "user_id", userId,
+              "request_id", requestId))
+      return err
+  }
+  ```
+
+## Using With Context
+
+- Create a context-aware logger:
+  ```go
+  // Add request ID to context
+  ctx := context.WithValue(context.Background(), "request_id", requestId)
+  
+  // Create logger with context values
+  ctxLogger := logger.With(
+      "request_id", requestId,
+      "trace_id", traceId)
+  
+  // Use throughout request handling
+  ctxLogger.Info("Processing request")
+  ```
+
+## Best Practices
+
+- Use appropriate log levels:
+  - `Debug`: Detailed information for debugging
+  - `Info`: General operational information
+  - `Warn`: Warning events that might cause issues
+  - `Error`: Error events that might still allow the application to continue
+  - `Fatal`: Severe error events that lead to application termination
+
+- Structure logs consistently:
+  - Group related attributes
+  - Use consistent naming conventions for attributes
+  - Include contextual information (request IDs, user IDs, etc.)
+
+- Avoid logging sensitive information:
+  - Passwords
+  - Authentication tokens
+  - Personal identifiable information
+
+- Use With() for creating derived loggers with common attributes:
+  ```go
+  serviceLogger := logger.With(
+      "service", "user-service",
+      "version", "1.0.0")
+  
+  // Later in code
+  serviceLogger.Info("Service started")
+  ```
+
+## Example Application
+
+```go
+package main
+
+import (
+    "log/slog"
+    "os"
+    "time"
+    
+    "github.com/dikkadev/prettyslog"
+)
+
+func main() {
+    // Initialize prettyslog
+    opts := &prettyslog.Options{
+        Level:        slog.LevelDebug,
+        TimeFormat:   time.RFC3339,
+        ColoredLevel: true,
+        ColoredTime:  true,
+        ShowSource:   true,
+    }
+    
+    logger := slog.New(prettyslog.NewHandler(os.Stdout, opts))
+    slog.SetDefault(logger)
+    
+    // Basic logging
+    logger.Info("Application started", "env", "production")
+    
+    // Using groups
+    logger.Info("User activity",
+        slog.Group("user",
+            "id", 123,
+            "name", "John Doe"),
+        slog.Group("activity",
+            "type", "login",
+            "timestamp", time.Now(),
+            "ip", "192.168.1.1"))
+    
+    // Error logging with context
+    err := simulateError()
+    if err != nil {
+        logger.Error("Operation failed",
+            "error", err,
+            slog.Group("context",
+                "operation", "data_processing",
+                "attempt", 3))
+    }
+    
+    // Create a component-specific logger
+    authLogger := logger.With(
+        "component", "auth",
+        "version", "v1.2")
+    
+    authLogger.Debug("Validating credentials")
+}
+
+func simulateError() error {
+    // Simulate an error for demonstration
+    return nil
+}
+```
+
+Remember to always use structured logging with prettyslog to take full advantage of its formatting capabilities and to make logs more searchable and analyzable. 

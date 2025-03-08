@@ -1,0 +1,119 @@
+---
+description: Guidelines for writing effective Cursor rules
+globs: *.mdc,.cursorrules
+alwaysApply: false
+---
+# Writing Effective Cursor Rules
+
+This guide provides best practices for creating and improving Cursor rules to enhance AI-assisted coding.
+
+## Rule Structure
+
+- **Use YAML Frontmatter**: Begin with YAML frontmatter containing:
+  - `description`: A concise description of the rule's purpose
+  - `globs`: File patterns the rule applies to (e.g., `*.py,*.js`)
+  - `alwaysApply`: Whether the rule should always be applied (boolean)
+
+- **Organize with Clear Sections**: Structure your rules with clear headings and subsections
+- **Use Markdown Formatting**: Leverage markdown for readability (headings, lists, code blocks)
+
+## Content Guidelines
+
+### Be Specific and Actionable
+
+- Provide concrete examples rather than vague instructions
+- Use imperative language ("Use X", "Avoid Y", "Follow Z pattern")
+- Include code snippets to illustrate preferred patterns
+
+### Focus on Key Areas
+
+1. **Code Style and Conventions**:
+   - Naming conventions (variables, functions, classes)
+   - Formatting preferences (indentation, line length)
+   - File organization and structure
+
+2. **Architecture and Patterns**:
+   - Preferred design patterns
+   - Project structure guidelines
+   - Component organization
+
+3. **Technical Requirements**:
+   - Framework-specific best practices
+   - Performance considerations
+   - Security guidelines
+
+4. **Workflow Preferences**:
+   - Testing approaches
+   - Documentation standards
+   - Commit message formats
+
+### Balance Brevity and Comprehensiveness
+
+- Prioritize the most important guidelines first
+- Be concise but provide enough context for understanding
+- Focus on unique aspects of your codebase or workflow
+
+## Technical Prompt Engineering for Cursor Rules
+
+### Use Directive Statements
+
+- Begin with clear directives: "Always", "Never", "Prefer", "Avoid"
+- Specify the reasoning behind guidelines when not obvious
+- Use numbered lists for sequential instructions
+
+### Leverage AI Understanding
+
+- Use technical terminology precisely
+- Reference common programming concepts by their standard names
+- Specify versions of languages, frameworks, or tools when relevant
+
+### Include Context Awareness
+
+- Specify how to handle different file types or contexts
+- Provide guidance for handling edge cases
+- Include rules for interacting with existing code vs. creating new code
+
+### Use Constraints and Preferences
+
+- Clearly distinguish between hard requirements and preferences
+- Use phrases like "must", "should", "prefer", "consider" to indicate importance
+- Specify alternatives when providing restrictions
+
+## Examples of Effective Rules
+
+### Good Example: Specific and Actionable
+
+```
+When writing React components:
+- Use functional components with TypeScript interfaces for props
+- Follow this structure:
+  1. Import statements
+  2. Type definitions
+  3. Component function
+  4. Helper functions
+- Extract complex logic into custom hooks
+- Use the useMemo hook for expensive calculations
+```
+
+### Poor Example: Vague and Unhelpful
+
+```
+Write good React code.
+Use TypeScript properly.
+Make components reusable.
+```
+
+## Testing and Refining Rules
+
+- Start with a minimal set of rules and expand gradually
+- Test rules on different types of coding tasks
+- Refine based on AI responses and effectiveness
+- Remove rules that don't improve AI assistance
+
+## Using @file References
+
+- Reference other files using the @file syntax to include them as context
+- Example: `@file:./examples/component-example.tsx`
+- This helps the AI understand concrete examples of your preferred patterns
+
+Remember that effective Cursor rules evolve over time as you identify patterns in your workflow and areas where AI assistance can be improved. 
