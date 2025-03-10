@@ -1,0 +1,298 @@
+---
+description: Best practices for writing documents in Typst
+globs: *.typ,*.typst
+alwaysApply: false
+---
+# Typst Document Writing Best Practices
+
+## Document Setup
+
+- Always use A4 paper size as the default:
+  ```typ
+  #set page(
+    paper: "a4",
+    margin: (x: 25mm, y: 30mm)
+  )
+  ```
+- Include document metadata at the beginning:
+  ```typ
+  #set document(
+    title: "Document Title",
+    author: "Author Name",
+    date: datetime.today()
+  )
+  ```
+- Configure page headers and footers for longer documents:
+  ```typ
+  #set page(
+    header: align(right)[Document Title],
+    footer: align(center)[#counter(page).display()]
+  )
+  ```
+- Use UTF-8 encoding for all Typst files
+
+## Document Structure
+
+- Organize your document with clear, hierarchical headings:
+  - Use `= Title` for top-level heading
+  - Use `== Section` for main sections
+  - Use `=== Subsection` for subsections
+  - Use `==== Subsubsection` for deeper levels
+- Enable section numbering for formal documents:
+  ```typ
+  #set heading(numbering: "1.1")
+  ```
+- Include a table of contents for documents longer than 5 pages:
+  ```typ
+  #outline(indent: true)
+  ```
+- Use a consistent structure throughout your document
+- Separate logical sections with heading or proper spacing
+
+## Content Organization
+
+- Keep paragraphs focused on a single idea
+- Use lists appropriately:
+  - Unordered lists with `- Item` for collections without sequence
+  - Ordered lists with `+ Item` for sequential content
+  - Definition lists with `/ Term: Definition` for term definitions
+- Use code blocks with language specification for code snippets:
+  ```typ
+  ```python
+  def hello():
+      print("Hello, world!")
+  ```
+  ```
+- Add captions to figures, tables, and other floating elements
+- Use cross-references with `@label` to reference figures, sections, etc.
+- Place footnotes at the end of sentences, not in the middle
+
+## Typography & Font Selection
+
+- Use system fonts or include fonts with your document:
+  ```typ
+  #set text(font: "Linux Libertine")
+  ```
+- Set an appropriate base font size (usually 11pt):
+  ```typ
+  #set text(size: 11pt)
+  ```
+- Define a reasonable line height for readability:
+  ```typ
+  #set par(leading: 0.65em)
+  ```
+- Use a serif font for body text and sans-serif for headings (optional):
+  ```typ
+  #set text(font: "Linux Libertine")
+  #set heading(font: "Linux Biolinum")
+  ```
+- Ensure proper spacing between paragraphs:
+  ```typ
+  #set par(first-line-indent: 1em, justify: true)
+  ```
+
+## Measurement Units
+
+- Always use millimeters (mm) for non-text elements:
+  ```typ
+  #rect(width: 50mm, height: 25mm)
+  #set page(margin: (x: 25mm, y: 30mm))
+  #grid(columns: (20mm, 30mm), [...])
+  ```
+- For text elements, use point (pt) for absolute sizes and em for relative sizes:
+  ```typ
+  #set text(size: 11pt)
+  #set par(leading: 0.65em, first-line-indent: 1em)
+  ```
+- Only use other units (cm, in, etc.) when they explicitly make sense for the context or are specifically requested:
+  ```typ
+  // When working with imported graphics scaled in inches
+  #image("diagram.png", width: 2in)
+  
+  // When specifying paper size in a different unit system
+  #set page(width: 8.5in, height: 11in)
+  ```
+- Be consistent with units throughout your document
+- Prefer mm for measurements that need to be consistent across different output media
+
+## Typesetting Mathematics
+
+- Use inline math with `$x^2 + y^2 = z^2$` for simple equations
+- Use display math with `$ x^2 + y^2 = z^2 $` for standalone equations
+- Add labels to important equations with `$ e = mc^2 $ <eq:einstein>`
+- Use aligned equations for multi-line derivations:
+  ```typ
+  $ 
+  a &= b + c \\
+  &= d + e \\
+  &= f
+  $
+  ```
+- Define mathematical notation consistently across the document
+- Use proper spacing in mathematical expressions
+- Consider creating a notation section for complex documents
+
+## Styling & Formatting
+
+- Define a consistent set of styles at the beginning of your document
+- Create reusable styles for repeated elements:
+  ```typ
+  #let note(body) = block(
+    fill: rgb("#f0f0f0"),
+    inset: 8mm,
+    radius: 4mm,
+    body
+  )
+  ```
+- Use semantic markup rather than direct styling:
+  - Use `_emphasis_` instead of arbitrary italic text
+  - Use `*strong*` instead of arbitrary bold text
+  - Use `#highlight[highlighted]` for highlighting
+- Maintain consistent spacing throughout the document
+- Use proper typography:
+  - Use proper quotation marks (`"quote"` or `'quote'`)
+  - Use en-dash (`--`) for ranges and em-dash (`---`) for parenthetical breaks
+  - Use proper non-breaking spaces where needed: `#h(1em)`
+
+## Bibliography & Citations
+
+- Store bibliography in a separate `.bib` file
+- Use consistent citation style throughout the document
+- Cite sources with `@key` for in-text citations
+- Use `#bibliography("references.bib")` to generate the bibliography
+- Choose an appropriate citation style based on your field:
+  ```typ
+  #set cite(style: "ieee")
+  ```
+- Include DOIs where available
+
+## Code Organization & Variables
+
+- Define reusable functions and variables at the start of your document
+- Use descriptive variable names
+- Organize content into logical modules if your document is large:
+  ```typ
+  #import "chapters/introduction.typ"
+  #introduction
+  ```
+- Use context-aware functions for consistent styling:
+  ```typ
+  #let theorem(body, name: none) = block(
+    fill: rgb("#f0f8ff"),
+    inset: 8pt,
+    radius: 4pt,
+    [*Theorem#if name != none [: #name]* #body]
+  )
+  ```
+- Create separate files for large collections of custom functions
+
+## Images & Figures
+
+- Use the figure environment for images with captions:
+  ```typ
+  #figure(
+    image("path/to/image.png", width: 80%),
+    caption: [Figure caption here]
+  ) <fig:label>
+  ```
+- Optimize images for appropriate resolution and file size
+- Use vector formats (SVG, PDF) for diagrams and line art
+- Use raster formats (PNG, JPEG) for photographs
+- Align and size images consistently
+- Make images accessible with descriptive captions
+
+## Tables
+
+- Use the table function for structured data:
+  ```typ
+  #table(
+    columns: (auto, auto, auto),
+    [Header 1], [Header 2], [Header 3],
+    [Cell 1], [Cell 2], [Cell 3]
+  )
+  ```
+- Add captions to tables using the figure function:
+  ```typ
+  #figure(
+    table(...),
+    caption: [Table caption]
+  ) <tbl:data>
+  ```
+- Align table content appropriately (left for text, right for numbers)
+- Keep tables readable with appropriate spacing and borders
+- Consider using grid for more complex table layouts
+
+## Document Output & Review
+
+- Add page numbers for longer documents
+- Generate a table of contents for documents with multiple sections
+- Use PDF bookmarks for easy navigation
+- Check for consistent formatting throughout the document
+- Validate all cross-references and citations before finalizing
+- Use proper section dividers for longer documents:
+  ```typ
+  #pagebreak()
+  ```
+
+## Template Usage
+
+- Create templates for frequently used document types:
+  ```typ
+  #let report(title, author, body) = {
+    set document(title: title, author: author)
+    set page(paper: "a4", numbering: "1", margin: (x: 25mm, y: 30mm))
+    set text(font: "Linux Libertine", size: 11pt)
+    
+    align(center)[
+      #text(size: 24pt)[#title]
+      #v(1em)
+      #text(size: 14pt)[#author]
+    ]
+    
+    v(2em)
+    outline()
+    v(2em)
+    
+    body
+  }
+  ```
+- Document templates with clear usage examples
+- Keep templates modular and customizable
+- Separate content from presentation in templates
+- Consider creating a separate template file:
+  ```typ
+  #import "template.typ": report
+  #show: report.with(
+    title: "My Document",
+    author: "My Name"
+  )
+  ```
+
+## Performance Considerations
+
+- Keep file sizes manageable by splitting large documents
+- Use lower resolution images where appropriate
+- Avoid unnecessary computation in repeated elements
+- Understand that complex layouts may slow down compilation
+- Use `#cache` for expensive computations when appropriate
+
+## Project Organization
+
+- For large documents, organize files in a logical directory structure:
+  ```
+  project/
+  ├── main.typ         # Main document
+  ├── template.typ     # Document template
+  ├── chapters/        # Chapter content
+  │   ├── intro.typ
+  │   └── ...
+  ├── figures/         # Image files
+  │   ├── diagram1.svg
+  │   └── ...
+  └── bibliography.bib # References
+  ```
+- Use consistent file naming conventions
+- Create a README file for project documentation
+- Consider version control for collaborative documents
+
+Remember to adapt these practices to your specific document requirements and field conventions. 
